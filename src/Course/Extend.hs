@@ -1,14 +1,14 @@
-{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE InstanceSigs        #-}
+{-# LANGUAGE NoImplicitPrelude   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE InstanceSigs #-}
 
 module Course.Extend where
 
-import Course.Core
-import Course.ExactlyOne
-import Course.List
-import Course.Optional
-import Course.Functor
+import           Course.Core
+import           Course.ExactlyOne
+import           Course.Functor
+import           Course.List
+import           Course.Optional
 
 -- | All instances of the `Extend` type-class must satisfy one law. This law
 -- is not checked by the compiler. This law is given as:
@@ -33,8 +33,7 @@ instance Extend ExactlyOne where
     (ExactlyOne a -> b)
     -> ExactlyOne a
     -> ExactlyOne b
-  (<<=) =
-    error "todo: Course.Extend (<<=)#instance ExactlyOne"
+  (<<=) = (ExactlyOne . )
 
 -- | Implement the @Extend@ instance for @List@.
 --
@@ -51,8 +50,9 @@ instance Extend List where
     (List a -> b)
     -> List a
     -> List b
-  (<<=) =
-    error "todo: Course.Extend (<<=)#instance List"
+  (<<=) f = (f <$>) . subs
+      where subs Nil      = Nil
+            subs (h :. t) = (h :. t) :. subs t
 
 -- | Implement the @Extend@ instance for @Optional@.
 --
@@ -66,8 +66,7 @@ instance Extend Optional where
     (Optional a -> b)
     -> Optional a
     -> Optional b
-  (<<=) =
-    error "todo: Course.Extend (<<=)#instance Optional"
+  (<<=) fa a = (\_ -> fa a) <$> a
 
 -- | Duplicate the functor using extension.
 --
@@ -86,5 +85,4 @@ cojoin ::
   Extend f =>
   f a
   -> f (f a)
-cojoin =
-  error "todo: Course.Extend#cojoin"
+cojoin = (id <<=)

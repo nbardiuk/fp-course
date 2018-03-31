@@ -25,8 +25,8 @@ instance (Applicative f, Applicative g) =>
 -- Implement the (<*>) function for an Applicative instance for Compose
   (<*>) (Compose fgab) (Compose fga) = Compose (lift2 (<*>) fgab fga)
 
-instance (Monad f, Monad g) =>
-  Monad (Compose f g) where
--- Implement the (=<<) function for a Monad instance for Compose
-  (=<<) =
-    error "todo: Course.Compose (<<=)#instance (Compose f g)"
+-- instance (Monad f, Monad g) =>
+--   Monad (Compose f g) where
+-- -- Implement the (=<<) function for a Monad instance for Compose
+--   (=<<) =
+--     error "todo: Course.Compose (<<=)#instance (Compose f g)"

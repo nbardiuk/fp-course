@@ -294,8 +294,8 @@ distinctG ::
   List a
   -> Logger Chars (Optional (List a))
 distinctG la = runOptionalT (evalT (filtering (\a -> StateT(\set -> OptionalT(
-    let state = Full (not (S.member a set), S.insert a set)
-     in if a > 100 then log1 ("aborting > 100: " ++ (show' a)) Empty
-                   else if even a then log1 ("even number: " ++ show' a) state
-                                  else pure state
+     if a > 100
+        then log1 ("aborting > 100: " ++ (show' a)) Empty
+        else (if even a then log1 ("even number: " ++ show' a) else pure)
+             (Full (not (S.member a set), S.insert a set))
     ))) la) S.empty)
